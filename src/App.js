@@ -1,24 +1,37 @@
-import logo from './logo.svg';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Home from './pages/Home';
+import { useCookies } from "react-cookie";
 
 function App() {
+  const [cookie , setCookie , removeCookie] = useCookies(["token"]);
+  console.log(`cookie + ${cookie}`);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <div className='w-full  font-poppins'>
+
+    {
+      cookie.token?(
+        <Routes>
+        <Route path='/home' element={<Home btn1={'Logout'} removeCookie={removeCookie} />} />
+        {/* kisi bhi path pe jaega usse redirect kr do , home page pe */}
+        <Route path='*' element={<Navigate to="/home" />} />
+  </Routes>
+      ):(
+        
+        <Routes>
+          <Route path='/home' element={<Home btn1={'signup'} btn2={'login'} />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<Signup/>} />
+          {/* kisi bhi path pe jaega usse redirect kr do , login page mai  */}
+          <Route path='*' element={<Navigate to="/login" />} />
+        </Routes>
+      )
+    }
+    
+   
+   </div>
   );
 }
 
