@@ -10,12 +10,14 @@ import Password from "../Components/Password";
 import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { makeUnauthenticatedPOSTRequest } from "../utils/serverHelper";
+import { AppContext } from "../Context/AppContext";
+import { useContext } from "react";
 
 function Login() {
   const navigate = useNavigate();
   const [passwordHide, setPasswordHide] = useState(false);
-  const [cookie , setCookie] = useCookies(["token"]);
-
+  const [cookie, setCookie] = useCookies(["token"]);
+  const { active , setActive } = useContext(AppContext);
 
   // email and password data contains
   const [formData, setFormData] = useState({
@@ -40,25 +42,26 @@ function Login() {
   }
 
   // ! final submission of form
- async function submitHandler(event) {
+  async function submitHandler(event) {
     event.preventDefault();
-      const response = await makeUnauthenticatedPOSTRequest("/login" , formData);
-        
-      if(response && response.success){
-        const token = response.token;
-     const date = new Date();
-        date.setDate(date.getDate() +30);
+    const response = await makeUnauthenticatedPOSTRequest("/login", formData);
+    console.log(response);
+    if (response && response.success) {
+      const token = response.token;
+      const date = new Date();
+      date.setDate(date.getDate() + 30);
+    
+      setCookie("token", token, {
+        path: "/",
+        expires: date,
+      });
 
-        setCookie("token" , token , {
-          path:"/"  , 
-          expires:date
-        })
- 
-         navigate("/home");
-       }
-      else{
-        alert(response.message);
-      }
+       
+      navigate("/home");
+      setActive("Home");
+    } else {
+      alert(response.message);
+    }
   }
 
   return (
@@ -88,16 +91,24 @@ function Login() {
       >
         <label htmlFor="email">
           <p>Email address or username</p>
-          
-          <InputField formData={formData} name={'email'} placeholder={'Enter your email'} changeHandler={changeHandler} />
-         
+
+          <InputField
+            formData={formData}
+            name={"email"}
+            placeholder={"Enter your email"}
+            changeHandler={changeHandler}
+          />
         </label>
 
         <label htmlFor="password">
           <p>Password</p>
           <div className="flex items-center  relative">
-          <Password passwordHide={passwordHide} changeHandler={changeHandler} formData={formData}  />
-           
+            <Password
+              passwordHide={passwordHide}
+              changeHandler={changeHandler}
+              formData={formData}
+            />
+
             {passwordHide ? (
               <AiFillEyeInvisible
                 className="absolute right-3  text-3xl cursor-pointer"
@@ -131,15 +142,15 @@ function Login() {
       {/* line */}
       <div className="w-full h-[1px] mt-6 opacity-40 mb-10 bg-black "></div>
 
-<div className="w-full flex flex-col gap-5 items-center justify-center">
+      <div className="w-full flex flex-col gap-5 items-center justify-center">
+        <p className="cursor-default">Don't have an account?</p>
 
-      <p className="cursor-default">Don't have an account?</p>
-
-<Link to="/signup">
-      <button className="mb-6 cursor-pointer border-2 border-gray-600 text-gray-600 w-[25rem] py-3 rounded-3xl hover:bg-gray-400 hover:text-white duration-200 ">SIGN FOR SPOTIFY</button>
-</Link>
-</div>
-
+        <Link to="/signup">
+          <button className="mb-6 cursor-pointer border-2 border-gray-600 text-gray-600 w-[25rem] py-3 rounded-3xl hover:bg-gray-400 hover:text-white duration-200 ">
+            SIGN FOR SPOTIFY
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }

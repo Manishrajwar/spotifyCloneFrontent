@@ -1,25 +1,26 @@
 
-import { useState } from "react";
 import PlaylistView from "../Components/PlaylistView";
 import Navbar from "../Components/Navbar";
 import Slidebar from "../Components/Slidebar";
 import cardData from "../store";
+import { useContext } from "react";
+import { AppContext } from "../Context/AppContext";
 
 
-function Home({btn1 , btn2 , removeCookie}) {
-  const [active, setActive] = useState("Search");
+function Home() {
 
+    const {active , setActive , cookie , setCookie , removeCookie} = useContext(AppContext);
   return (
     <div className="w-full flex relative overflow-x-hidden ">
       {/* left part */}
-      <Slidebar active={active} setActive={setActive} />
+      <Slidebar cookie={cookie}  active={active} setActive={setActive} />
 
 
       {/* right part music content */}
       <div className="w-screen h-full bg-app-black items-center ">
           
           {/* navbar stick  */}
-           <Navbar btn1={btn1} btn2={btn2} removeCookie={removeCookie} />
+           <Navbar  />
 
           {/* second part */}
           <div className="pl-[23%] pt-[100px] pr-[3rem] w-screen h-full mb-16 flex flex-col gap-9">

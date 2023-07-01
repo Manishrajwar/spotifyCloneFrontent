@@ -3,12 +3,19 @@ import IconText from "../Components/IconText";
 import { GoHome } from "react-icons/go";
 import { FiSearch } from "react-icons/fi";
 import { VscLibrary } from "react-icons/vsc";
+import { FcMusic } from "react-icons/fc";
 import { AiOutlineHeart } from "react-icons/ai";
+import { HiUpload } from "react-icons/hi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { MdLanguage } from "react-icons/md";
 import { Link} from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../Context/AppContext";
 
-function Slidebar({active , setActive}){
+function Slidebar({cookie}){
+
+  const {active ,setActive} = useContext(AppContext);
+
     return (
         <div className="w-[22%] overflow-hidden fixed flex flex-col  gap-10 bg-black text-white h-screen ">
         {/*  for logo */}
@@ -27,18 +34,42 @@ function Slidebar({active , setActive}){
               setActive={setActive}
             />
           </Link>
+       <Link to="/search">
           <IconText
             icon={<FiSearch />}
             text={"Search"}
             active={active}
             setActive={setActive}
-          />
+            />
+            </Link>
           <IconText
             icon={<VscLibrary />}
             text={"Your Library"}
             active={active}
             setActive={setActive}
           />
+          {
+            cookie.token &&
+          <IconText
+          icon={<FcMusic />}
+          text={"My Music"}
+          active={active}
+          setActive={setActive}
+          />
+        }
+
+
+        {
+          cookie.token && 
+         <Link to="/UploadSong">
+          <IconText
+          icon={<HiUpload />}
+          text={"Upload Song"}
+          active={active}
+          setActive={setActive}
+          />
+          </Link>
+        }
 
           <div className="flex flex-col gap-6 mt-14">
             <IconText
@@ -47,12 +78,17 @@ function Slidebar({active , setActive}){
               active={active}
               setActive={setActive}
             />
+
+            {
+              cookie.token &&
+            
             <IconText
               icon={<AiOutlineHeart />}
               text={"Liked Songs"}
               active={active}
               setActive={setActive}
             />
+}
           </div>
         </div>
 

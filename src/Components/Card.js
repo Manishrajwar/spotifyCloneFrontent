@@ -1,4 +1,3 @@
-import { type } from "@testing-library/user-event/dist/type";
 import { Icon } from "@iconify/react";
 
 function Card({ title, description  , imgUrl}) {
